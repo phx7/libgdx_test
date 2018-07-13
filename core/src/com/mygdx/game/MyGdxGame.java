@@ -39,20 +39,19 @@ public class MyGdxGame extends ApplicationAdapter implements InputProcessor {
 		float h = Gdx.graphics.getHeight();
 
 		batch = new SpriteBatch();
-		player = new Player(100,100, "player.gif");
+		player = new Player(100,100, "sprite_64.png");
 		controller = new KeyboardController();
 
 		world = new World(new Vector2(0, 0),true);
 		BodyDef bodyDef = new BodyDef();
 		bodyDef.type = BodyDef.BodyType.DynamicBody;
-		bodyDef.position.set((player.sprite.getX() + player.sprite.getWidth()/2) /
+		bodyDef.position.set((player.x + player.sprite.getWidth()/2) /
 						PIXELS_TO_METERS,
-				(player.sprite.getY() + player.sprite.getHeight()/2) / PIXELS_TO_METERS);
+				(player.y + player.sprite.getHeight()/2) / PIXELS_TO_METERS);
 		player.body = world.createBody(bodyDef);
 
 		PolygonShape shape = new PolygonShape();
-		shape.setAsBox(player.sprite.getWidth()/2 / PIXELS_TO_METERS, player.sprite.getHeight()
-				/2 / PIXELS_TO_METERS);
+		shape.setAsBox(player.sprite.getWidth() * 2, player.sprite.getHeight() * 2);
 
 		FixtureDef fixtureDef = new FixtureDef();
 		fixtureDef.shape = shape;
