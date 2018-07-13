@@ -8,11 +8,11 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.maps.MapLayer;
 import com.badlogic.gdx.maps.MapObject;
-import com.badlogic.gdx.maps.tiled.TiledMap;
-import com.badlogic.gdx.maps.tiled.TiledMapRenderer;
-import com.badlogic.gdx.maps.tiled.TmxMapLoader;
+import com.badlogic.gdx.maps.tiled.*;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
+import com.badlogic.gdx.maps.tiled.tiles.StaticTiledMapTile;
 import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
@@ -68,8 +68,17 @@ public class MyGdxGame extends ApplicationAdapter implements InputProcessor {
 		tiledMap = new TmxMapLoader().load("maps/map1.tmx");
 		tiledMapRenderer = new OrthogonalTiledMapRenderer(tiledMap);
 
-		for(MapObject obj: tiledMap.getLayers().get(2).getObjects()) {
-//			obj.getProperties();
+		TiledMapTileLayer tileLayer = (TiledMapTileLayer) tiledMap.getLayers().get("collision");
+
+		int ind = 0;
+		for (int y = 0; y <= 20; y++) {
+			for (int x = 0; x <= 20; x++) {
+				TiledMapTileLayer.Cell cell = tileLayer.getCell(x, y);
+				if (cell != null) {
+					// create body for i,j cell
+					createCollidable(x * 32, y * 32, 32);
+				}
+			}
 		}
 
 		Gdx.input.setInputProcessor(controller);
@@ -95,8 +104,8 @@ public class MyGdxGame extends ApplicationAdapter implements InputProcessor {
 		camera.update();
 
 		batch.setProjectionMatrix(camera.combined);
-		debugMatrix = batch.getProjectionMatrix().cpy().scale(PIXELS_TO_METERS,
-				PIXELS_TO_METERS, 0);
+		debugMatrix = batch.getProjectionMatrix().cpy().scale(1,
+				1, 0);
 
 		tiledMapRenderer.setView(camera);
 		tiledMapRenderer.render();
@@ -111,6 +120,24 @@ public class MyGdxGame extends ApplicationAdapter implements InputProcessor {
 		batch.end();
 
 		debugRenderer.render(world, debugMatrix);
+	}
+
+	public void createCollidable(int x, int y, int h) {
+		BodyDef bodyDef = new BodyDef();
+		bodyDef.type = BodyDef.BodyType.StaticBody;
+		bodyDef.position.set(x, y);
+		Body body = world.createBody(bodyDef);
+
+		PolygonShape shape = new PolygonShape();
+		shape.setAsBox(h, h);
+
+		FixtureDef fixtureDef = new FixtureDef();
+		fixtureDef.shape = shape;
+		fixtureDef.density = 0.1f;
+		fixtureDef.restitution = 0.5f;
+
+		body.createFixture(fixtureDef);
+		shape.dispose();
 	}
 
 	public void keys() {
