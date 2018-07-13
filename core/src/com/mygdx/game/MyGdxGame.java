@@ -116,7 +116,7 @@ public class MyGdxGame extends ApplicationAdapter {
 		float cameraY = player.body.getPosition().y;
 		
 		if(cameraX < mapWidth / 2){
-			cameraX = Math.max(cameraX, mapWidth * 0.43f);
+			cameraX = Math.max(cameraX, mapWidth * 0.43f); //TODO delete hardcode, calculate constant
 		}
 		else{
 			cameraX = Math.min(cameraX, mapWidth * 0.57f);
