@@ -16,5 +16,5 @@ class Player {
         this.sprite.setScale(factor);
         this.x = x;
         this.y = y;
-    };
+    }
 }

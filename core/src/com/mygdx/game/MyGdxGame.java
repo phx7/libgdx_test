@@ -20,9 +20,9 @@ import com.badlogic.gdx.physics.box2d.*;
 public class MyGdxGame extends ApplicationAdapter implements InputProcessor {
 	private SpriteBatch batch;
 	private Player player;
-	private float moveFactor = 15;
-	private OrthographicCamera camera;
-	private TiledMap tiledMap;
+	private float moveFactor = 150;
+	public OrthographicCamera camera;
+	public TiledMap tiledMap;
 	private OrthogonalTiledMapRenderer tiledMapRenderer;
 	private World world;
 
@@ -39,8 +39,12 @@ public class MyGdxGame extends ApplicationAdapter implements InputProcessor {
 
 		batch = new SpriteBatch();
 		player = new Player(100,100, "sprite_64.png");
-		controller = new KeyboardController();
-
+		controller = new KeyboardController(this);
+		
+		camera = new OrthographicCamera();
+		camera.setToOrtho(false,w,h);
+		camera.update();
+		
 		world = new World(new Vector2(0, 0),true);
 		BodyDef bodyDef = new BodyDef();
 		bodyDef.type = BodyDef.BodyType.DynamicBody;
@@ -48,12 +52,12 @@ public class MyGdxGame extends ApplicationAdapter implements InputProcessor {
 		player.body = world.createBody(bodyDef);
 
 		PolygonShape shape = new PolygonShape();
-		shape.setAsBox(player.sprite.getWidth(), player.sprite.getHeight());
+		shape.setAsBox(player.sprite.getWidth()/2.4f, player.sprite.getHeight()/2.4f);
 
 		FixtureDef fixtureDef = new FixtureDef();
 		fixtureDef.shape = shape;
-		fixtureDef.density = 0.1f;
-		fixtureDef.restitution = 0.5f;
+		fixtureDef.density = 0.0f;
+		fixtureDef.restitution = 0.0f;
 
 		player.body.createFixture(fixtureDef);
 		shape.dispose();
@@ -91,14 +95,16 @@ public class MyGdxGame extends ApplicationAdapter implements InputProcessor {
 
 		player.body.applyTorque(torque,true);
 
-		player.sprite.setPosition((player.x * PIXELS_TO_METERS),
-				(player.y * PIXELS_TO_METERS));
+		player.sprite.setPosition(player.x, player.y);
 
 		Gdx.gl.glClearColor(0, 0, 0, 1);
 		Gdx.gl.glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 		camera.update();
-
+		
+		tiledMapRenderer.setView(camera);
+		tiledMapRenderer.render();
+		
 		batch.setProjectionMatrix(camera.combined);
 		debugMatrix = batch.getProjectionMatrix().cpy().scale(1,
 				1, 0);
@@ -108,10 +114,10 @@ public class MyGdxGame extends ApplicationAdapter implements InputProcessor {
 
 		batch.begin();
 
-		batch.draw(player.sprite, player.sprite.getX(), player.sprite.getY(),player.sprite.getOriginX(),
-					player.sprite.getOriginY(),
-					player.sprite.getWidth(),player.sprite.getHeight(),player.sprite.getScaleX(),player.sprite.
-							getScaleY(),player.sprite.getRotation());
+		batch.draw(player.sprite, player.body.getPosition().x, player.body.getPosition().y,
+				player.body.getPosition().x, player.body.getPosition().y,
+				player.sprite.getWidth(), player.sprite.getHeight(),
+				player.sprite.getScaleX(), player.sprite.getScaleY(), player.sprite.getRotation());
 
 		batch.end();
 
@@ -148,7 +154,7 @@ public class MyGdxGame extends ApplicationAdapter implements InputProcessor {
 		if (Math.abs(x) > 0f && Math.abs(y) > 0f) {
 			x = x * 0.7f;
 			y = y * 0.7f;
-		};
+		}
 		player.body.setLinearVelocity(x,y);
 	}
 	
