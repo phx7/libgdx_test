@@ -4,6 +4,7 @@ import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputProcessor;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
@@ -99,6 +100,9 @@ public class MyGdxGame extends ApplicationAdapter {
 		flame.load(Gdx.files.internal("fire.pt"), Gdx.files.internal(""));
 		flame.getEmitters().first().setPosition(player.x, player.y);
 		flame.start();
+
+		Sound sound = Gdx.audio.newSound(Gdx.files.internal("sounds/cheekibreeki.mp3"));
+		sound.play(0.3f);
 
 		Gdx.input.setInputProcessor(controller);
 	}
