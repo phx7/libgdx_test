@@ -4,6 +4,7 @@ import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.math.Vector3;
 
 public class KeyboardController  implements InputProcessor {
     public boolean left,right,up,down;
@@ -74,6 +75,9 @@ public class KeyboardController  implements InputProcessor {
             game.tiledMap.getLayers().get(0).setVisible(!game.tiledMap.getLayers().get(0).isVisible());
         if(keycode == Input.Keys.NUM_2)
             game.tiledMap.getLayers().get(1).setVisible(!game.tiledMap.getLayers().get(1).isVisible());
+        if(keycode == Input.Keys.NUM_4) {
+        
+        }
         
         return keyProcessed;    //  return our peyProcessed flag
     }
