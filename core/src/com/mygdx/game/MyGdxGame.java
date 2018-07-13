@@ -7,6 +7,7 @@ import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.ParticleEffect;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.maps.MapLayer;
 import com.badlogic.gdx.maps.MapObject;
@@ -38,6 +39,7 @@ public class MyGdxGame extends ApplicationAdapter {
 	private Matrix4 debugMatrix;
 	private Box2DDebugRenderer debugRenderer;
 	private KeyboardController controller;
+	private ParticleEffect flame;
 
 	@Override
 	public void create () {
@@ -47,7 +49,7 @@ public class MyGdxGame extends ApplicationAdapter {
 		batch = new SpriteBatch();
 		player = new Player(100,100, "sprite_64.png");
 		controller = new KeyboardController(this);
-		
+
 		camera = new OrthographicCamera();
 		camera.setToOrtho(false,w,h);
 		camera.update();
@@ -92,6 +94,11 @@ public class MyGdxGame extends ApplicationAdapter {
 				}
 			}
 		}
+
+		flame = new ParticleEffect();
+		flame.load(Gdx.files.internal("fire.pt"), Gdx.files.internal(""));
+		flame.getEmitters().first().setPosition(player.x, player.y);
+		flame.start();
 
 		Gdx.input.setInputProcessor(controller);
 	}
@@ -139,7 +146,11 @@ public class MyGdxGame extends ApplicationAdapter {
 		debugMatrix = batch.getProjectionMatrix().cpy().scale(1,
 				1, 0);
 
+		flame.update(Gdx.graphics.getDeltaTime());
 		batch.begin();
+
+		flame.setPosition(player.body.getPosition().x, player.body.getPosition().y);
+		flame.draw(batch);
 
 		batch.draw(player.sprite, player.body.getPosition().x - (player.sprite.getWidth()/2), player.body.getPosition().y - (player.sprite.getHeight()/2),
 				player.body.getPosition().x, player.body.getPosition().y,
@@ -147,6 +158,9 @@ public class MyGdxGame extends ApplicationAdapter {
 				player.sprite.getScaleX(), player.sprite.getScaleY(), player.sprite.getRotation());
 
 		batch.end();
+
+		if (flame.isComplete())
+			flame.reset();
 
 		if(debug) {
 			debugRenderer.render(world, debugMatrix);
