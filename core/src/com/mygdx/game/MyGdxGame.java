@@ -48,7 +48,7 @@ public class MyGdxGame extends ApplicationAdapter implements InputProcessor {
 		player.body = world.createBody(bodyDef);
 
 		PolygonShape shape = new PolygonShape();
-		shape.setAsBox(player.sprite.getWidth(), player.sprite.getHeight());
+		shape.setAsBox(player.sprite.getWidth() / 2, player.sprite.getHeight() / 2);
 
 		FixtureDef fixtureDef = new FixtureDef();
 		fixtureDef.shape = shape;
