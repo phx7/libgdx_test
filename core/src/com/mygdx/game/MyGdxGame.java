@@ -26,6 +26,12 @@ public class MyGdxGame extends ApplicationAdapter {
 	private OrthogonalTiledMapRenderer tiledMapRenderer;
 	private World world;
 	public static boolean debug = false;
+	private int mapCellsWidth;
+	private int mapCellsHeight;
+	private int mapWidth;
+	private int mapHeight;
+	private int tileWidth;
+	private int tileHeight;
 
 	final float PIXELS_TO_METERS = 10f;
 	float torque = 0.0f;
@@ -66,15 +72,23 @@ public class MyGdxGame extends ApplicationAdapter {
 		debugRenderer = new Box2DDebugRenderer();
 		tiledMap = new TmxMapLoader().load("maps/map1.tmx");
 		tiledMapRenderer = new OrthogonalTiledMapRenderer(tiledMap);
-
+		
+		mapCellsWidth = tiledMap.getProperties().get("width",Integer.class);
+		mapCellsHeight = tiledMap.getProperties().get("height",Integer.class);
+		tileWidth = tiledMap.getProperties().get("tilewidth",Integer.class);
+		tileHeight = tiledMap.getProperties().get("tileheight",Integer.class);
+		
+		mapWidth = mapCellsWidth * tileWidth;
+		mapHeight = mapCellsHeight * tileHeight;
+		
 		TiledMapTileLayer tileLayer = (TiledMapTileLayer) tiledMap.getLayers().get("collision");
 
-		for (int y = 0; y <= 20; y++) {
-			for (int x = 0; x <= 20; x++) {
+		for (int y = 0; y <= mapCellsHeight; y++) {
+			for (int x = 0; x <= mapCellsWidth; x++) {
 				TiledMapTileLayer.Cell cell = tileLayer.getCell(x, y);
 				if (cell != null) {
 					// create body for i,j cell
-					createCollidable(x * 32, y * 32, 32);
+					createCollidable(x * tileWidth, y * tileWidth, tileWidth);
 				}
 			}
 		}
@@ -97,7 +111,14 @@ public class MyGdxGame extends ApplicationAdapter {
 		Gdx.gl.glClearColor(0, 0, 0, 1);
 		Gdx.gl.glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-		camera.position.set(new Vector2(player.body.getPosition().x, player.body.getPosition().y), 0);
+		
+		float cameraX = player.body.getPosition().x;
+		float cameraY = player.body.getPosition().y;
+		
+		cameraX = Math.max(cameraX, mapWidth * 0.43f);
+		cameraY = Math.max(cameraY, mapHeight * 0.43f);
+		
+		camera.position.set(new Vector2(cameraX, cameraY), 0);
 		camera.update();
 		
 		tiledMapRenderer.setView(camera);
