@@ -120,7 +120,7 @@ public class MyGdxGame extends ApplicationAdapter implements InputProcessor {
 
 	public void createCollidable(int x, int y, int h) {
 		BodyDef bodyDef = new BodyDef();
-		bodyDef.type = BodyDef.BodyType.DynamicBody;
+		bodyDef.type = BodyDef.BodyType.StaticBody;
 		bodyDef.position.set(x, y);
 		Body body = world.createBody(bodyDef);
 
