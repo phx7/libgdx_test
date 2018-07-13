@@ -29,7 +29,6 @@ public class MyGdxGame extends ApplicationAdapter implements InputProcessor {
 	final float PIXELS_TO_METERS = 10f;
 	float torque = 0.0f;
 	private Matrix4 debugMatrix;
-	private boolean drawSprite = true;
 	private Box2DDebugRenderer debugRenderer;
 	private KeyboardController controller;
 
@@ -45,13 +44,11 @@ public class MyGdxGame extends ApplicationAdapter implements InputProcessor {
 		world = new World(new Vector2(0, 0),true);
 		BodyDef bodyDef = new BodyDef();
 		bodyDef.type = BodyDef.BodyType.DynamicBody;
-		bodyDef.position.set((player.x + player.sprite.getWidth()/2) /
-						PIXELS_TO_METERS,
-				(player.y + player.sprite.getHeight()/2) / PIXELS_TO_METERS);
+		bodyDef.position.set(player.x,player.y);
 		player.body = world.createBody(bodyDef);
 
 		PolygonShape shape = new PolygonShape();
-		shape.setAsBox(player.sprite.getWidth() * 2, player.sprite.getHeight() * 2);
+		shape.setAsBox(player.sprite.getWidth(), player.sprite.getHeight());
 
 		FixtureDef fixtureDef = new FixtureDef();
 		fixtureDef.shape = shape;
@@ -94,9 +91,8 @@ public class MyGdxGame extends ApplicationAdapter implements InputProcessor {
 
 		player.body.applyTorque(torque,true);
 
-		player.sprite.setPosition((player.body.getPosition().x * PIXELS_TO_METERS) - player.sprite.
-						getWidth()/2 ,
-				(player.body.getPosition().y * PIXELS_TO_METERS) - player.sprite.getHeight()/2 );
+		player.sprite.setPosition((player.x * PIXELS_TO_METERS),
+				(player.y * PIXELS_TO_METERS));
 
 		Gdx.gl.glClearColor(0, 0, 0, 1);
 		Gdx.gl.glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
@@ -124,12 +120,12 @@ public class MyGdxGame extends ApplicationAdapter implements InputProcessor {
 
 	public void createCollidable(int x, int y, int h) {
 		BodyDef bodyDef = new BodyDef();
-		bodyDef.type = BodyDef.BodyType.StaticBody;
+		bodyDef.type = BodyDef.BodyType.DynamicBody;
 		bodyDef.position.set(x, y);
 		Body body = world.createBody(bodyDef);
 
 		PolygonShape shape = new PolygonShape();
-		shape.setAsBox(h, h);
+		shape.setAsBox(h/2, h/2);
 
 		FixtureDef fixtureDef = new FixtureDef();
 		fixtureDef.shape = shape;
