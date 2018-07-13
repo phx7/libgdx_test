@@ -17,7 +17,7 @@ import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
 
-public class MyGdxGame extends ApplicationAdapter implements InputProcessor {
+public class MyGdxGame extends ApplicationAdapter {
 	private SpriteBatch batch;
 	public Player player;
 	private float moveFactor = 150;
@@ -107,9 +107,6 @@ public class MyGdxGame extends ApplicationAdapter implements InputProcessor {
 		debugMatrix = batch.getProjectionMatrix().cpy().scale(1,
 				1, 0);
 
-		tiledMapRenderer.setView(camera);
-		tiledMapRenderer.render();
-
 		batch.begin();
 
 		batch.draw(player.sprite, player.body.getPosition().x - (player.sprite.getWidth()/2), player.body.getPosition().y - (player.sprite.getHeight()/2),
@@ -125,7 +122,7 @@ public class MyGdxGame extends ApplicationAdapter implements InputProcessor {
 	public void createCollidable(int x, int y, int h) {
 		BodyDef bodyDef = new BodyDef();
 		bodyDef.type = BodyDef.BodyType.StaticBody;
-		bodyDef.position.set(x, y);
+		bodyDef.position.set(x + 16, y + 16); //put here block dimensions variables
 		Body body = world.createBody(bodyDef);
 
 		PolygonShape shape = new PolygonShape();
@@ -161,45 +158,5 @@ public class MyGdxGame extends ApplicationAdapter implements InputProcessor {
 		batch.dispose();
 		world.dispose();
 	}
-
-	@Override
-	public boolean keyDown(int keycode) {
-		return false;
-	}
-
-	@Override
-	public boolean keyUp(int keycode) {
-		return false;
-	}
-
-	@Override
-	public boolean keyTyped(char character) {
-
-		return false;
-	}
-
-	@Override
-	public boolean touchDown(int screenX, int screenY, int pointer, int button) {
-		return false;
-	}
-
-	@Override
-	public boolean touchUp(int screenX, int screenY, int pointer, int button) {
-		return false;
-	}
-
-	@Override
-	public boolean touchDragged(int screenX, int screenY, int pointer) {
-		return false;
-	}
-
-	@Override
-	public boolean mouseMoved(int screenX, int screenY) {
-		return false;
-	}
-
-	@Override
-	public boolean scrolled(int amount) {
-		return false;
-	}
+	
 }
