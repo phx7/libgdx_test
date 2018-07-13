@@ -68,7 +68,6 @@ public class MyGdxGame extends ApplicationAdapter {
 
 		TiledMapTileLayer tileLayer = (TiledMapTileLayer) tiledMap.getLayers().get("collision");
 
-		int ind = 0;
 		for (int y = 0; y <= 20; y++) {
 			for (int x = 0; x <= 20; x++) {
 				TiledMapTileLayer.Cell cell = tileLayer.getCell(x, y);
