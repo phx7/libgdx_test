@@ -112,7 +112,7 @@ public class MyGdxGame extends ApplicationAdapter implements InputProcessor {
 
 		batch.begin();
 
-		batch.draw(player.sprite, player.body.getPosition().x, player.body.getPosition().y,
+		batch.draw(player.sprite, player.body.getPosition().x - (player.sprite.getWidth()/2), player.body.getPosition().y - (player.sprite.getHeight()/2),
 				player.body.getPosition().x, player.body.getPosition().y,
 				player.sprite.getWidth(), player.sprite.getHeight(),
 				player.sprite.getScaleX(), player.sprite.getScaleY(), player.sprite.getRotation());
