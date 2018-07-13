@@ -19,7 +19,7 @@ import com.badlogic.gdx.physics.box2d.*;
 
 public class MyGdxGame extends ApplicationAdapter implements InputProcessor {
 	private SpriteBatch batch;
-	private Player player;
+	public Player player;
 	private float moveFactor = 150;
 	public OrthographicCamera camera;
 	public TiledMap tiledMap;
@@ -63,9 +63,6 @@ public class MyGdxGame extends ApplicationAdapter implements InputProcessor {
 		shape.dispose();
 
 		debugRenderer = new Box2DDebugRenderer();
-		camera = new OrthographicCamera();
-		camera.setToOrtho(false,w,h);
-		camera.update();
 		tiledMap = new TmxMapLoader().load("maps/map1.tmx");
 		tiledMapRenderer = new OrthogonalTiledMapRenderer(tiledMap);
 
@@ -100,6 +97,7 @@ public class MyGdxGame extends ApplicationAdapter implements InputProcessor {
 		Gdx.gl.glClearColor(0, 0, 0, 1);
 		Gdx.gl.glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+		camera.position.set(new Vector2(player.body.getPosition().x, player.body.getPosition().y), 0);
 		camera.update();
 		
 		tiledMapRenderer.setView(camera);
