@@ -8,6 +8,7 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.maps.MapObject;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TiledMapRenderer;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
@@ -19,13 +20,13 @@ import com.badlogic.gdx.physics.box2d.*;
 public class MyGdxGame extends ApplicationAdapter implements InputProcessor {
 	private SpriteBatch batch;
 	private Player player;
-	private float moveFactor = 50;
+	private float moveFactor = 15;
 	private OrthographicCamera camera;
 	private TiledMap tiledMap;
 	private OrthogonalTiledMapRenderer tiledMapRenderer;
 	private World world;
 
-	final float PIXELS_TO_METERS = 1f;
+	final float PIXELS_TO_METERS = 10f;
 	float torque = 0.0f;
 	private Matrix4 debugMatrix;
 	private boolean drawSprite = true;
@@ -67,6 +68,11 @@ public class MyGdxGame extends ApplicationAdapter implements InputProcessor {
 		camera.update();
 		tiledMap = new TmxMapLoader().load("maps/map1.tmx");
 		tiledMapRenderer = new OrthogonalTiledMapRenderer(tiledMap);
+
+		for(MapObject obj: tiledMap.getLayers().get(2).getObjects()) {
+//			obj.getProperties();
+		}
+
 		Gdx.input.setInputProcessor(controller);
 	}
 
@@ -132,29 +138,11 @@ public class MyGdxGame extends ApplicationAdapter implements InputProcessor {
 
 	@Override
 	public boolean keyDown(int keycode) {
-		if(keycode == Input.Keys.RIGHT)
-			player.body.setLinearVelocity(1f * moveFactor, player.body.getLinearVelocity().y);
-		if(keycode == Input.Keys.LEFT)
-			player.body.setLinearVelocity(-1f * moveFactor,player.body.getLinearVelocity().y);
-
-		if(keycode == Input.Keys.UP)
-			player.body.setLinearVelocity(player.body.getLinearVelocity().x, 1f * moveFactor);
-		if(keycode == Input.Keys.DOWN)
-			player.body.setLinearVelocity(player.body.getLinearVelocity().x, -1f * moveFactor);
 		return false;
 	}
 
 	@Override
 	public boolean keyUp(int keycode) {
-		if(keycode == Input.Keys.RIGHT)
-			player.body.setLinearVelocity(0f, player.body.getLinearVelocity().y);
-		if(keycode == Input.Keys.LEFT)
-			player.body.setLinearVelocity(0f, player.body.getLinearVelocity().y);
-
-		if(keycode == Input.Keys.UP)
-			player.body.setLinearVelocity(player.body.getLinearVelocity().x, 0f);
-		if(keycode == Input.Keys.DOWN)
-			player.body.setLinearVelocity(player.body.getLinearVelocity().x,0f);
 		return false;
 	}
 
