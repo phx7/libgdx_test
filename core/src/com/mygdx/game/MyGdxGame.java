@@ -25,6 +25,7 @@ public class MyGdxGame extends ApplicationAdapter {
 	public TiledMap tiledMap;
 	private OrthogonalTiledMapRenderer tiledMapRenderer;
 	private World world;
+	public static boolean debug = false;
 
 	final float PIXELS_TO_METERS = 10f;
 	float torque = 0.0f;
@@ -115,7 +116,9 @@ public class MyGdxGame extends ApplicationAdapter {
 
 		batch.end();
 
-		debugRenderer.render(world, debugMatrix);
+		if(debug) {
+			debugRenderer.render(world, debugMatrix);
+		}
 	}
 
 	public void createCollidable(int x, int y, int h) {
